@@ -16,7 +16,6 @@ type Block struct {
 	Data []byte
 }
 
-
 // 2.创建一个区块
 func NewBlock(data string, prevBlockHash []byte) *Block {
 	block := Block{
