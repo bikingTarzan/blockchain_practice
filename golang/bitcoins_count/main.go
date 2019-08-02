@@ -6,7 +6,7 @@ import (
 
 func main() {
 	total := 0.0
-	blockinterval := 21.0		//单位：万	比特币每21个区块减半
+	blockinterval := 21.0		//单位：万	比特币每21万个区块减半
 	currentReward := 50.0		//第一个区块50个比特币
 
 	for currentReward > 0 {
