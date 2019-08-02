@@ -18,7 +18,7 @@ func main() {
 
 	}
 
-	fmt.Printf("比特币总量为:%v 个\n", total)
+	fmt.Printf("比特币总量为:%v 万个\n", total)	//比特币总量为:2100 万个
 
 }
 
