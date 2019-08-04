@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// 存储方式由slice更换为blkot数据库（kv库）
+// 存储方式由slice更换为bolt数据库（kv库）
 func main() {
 	bc := NewBlockChain()
 
