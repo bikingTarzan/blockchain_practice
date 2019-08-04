@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// 增添了pow机制
 func main() {
 	bc := NewBlockChain()
 
