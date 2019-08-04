@@ -4,8 +4,9 @@ import (
 	"log"
 	"time"
 	"bytes"
-	"crypto/sha256"
+	// "crypto/sha256"
 	"encoding/binary"
+	"encoding/gob"
 )
 
 
@@ -20,7 +21,7 @@ type Block struct {
 	// 4.时间戳
 	TimeStamp uint64
 	// 5.难度值
-	Difficult uint64
+	Difficulty uint64
 	// 6.随机数，挖矿时要用的
 	Nonce uint64
 
@@ -49,7 +50,7 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 		PrevHash:	prevBlockHash,
 		MerkelRoot: []byte{},
 		TimeStamp:	uint64(time.Now().Unix()),
-		Difficult:	0,
+		Difficulty:	0,
 		Nonce:		0,
 		Hash:		[]byte{},
 		Data:		[]byte(data),
@@ -67,36 +68,68 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	return &block
 }
 
-// 3.生成哈希
-func (block *Block) SetHash() {
-	// 1.拼接数据
-	// blockinfo := append(block.PrevHash, block.Data...)
+// 序列化
+func (block *Block) Serialize() []byte {
+	var buffer bytes.Buffer
 
-	//1. 拼装数据
-	/*
-	blockInfo = append(blockInfo, Uint64ToByte(block.Version)...)
-	blockInfo = append(blockInfo, block.PrevHash...)
-	blockInfo = append(blockInfo, block.MerkelRoot...)
-	blockInfo = append(blockInfo, Uint64ToByte(block.TimeStamp)...)
-	blockInfo = append(blockInfo, Uint64ToByte(block.Difficulty)...)
-	blockInfo = append(blockInfo, Uint64ToByte(block.Nonce)...)
-	blockInfo = append(blockInfo, block.Data...)
-	*/
-
-	//1. 拼装数据,join
-	tmp := [][]byte{
-		Uint64ToByte(block.Version),
-		block.PrevHash,
-		block.MerkelRoot,
-		Uint64ToByte(block.TimeStamp),
-		Uint64ToByte(block.Difficult),
-		Uint64ToByte(block.Nonce),
-		block.Data,
+	// 使用gob进行序列化（编码）得到字节流
+	// 1.定义一个编码器
+	// 2.使用编码器进行编码
+	encoder := gob.NewEncoder(&buffer)
+	err := encoder.Encode(&block)
+	if err != nil {
+		log.Panic("编码出错！")
 	}
 
-	blockinfo := bytes.Join(tmp, []byte{})
-
-	// 2.sha256
-	hash := sha256.Sum256(blockinfo)
-	block.Hash = hash[:]
+	return buffer.Bytes()
 }
+
+//	反序列化
+func Deserialize(data []byte) Block {
+	decoder := gob.NewDecoder(bytes.NewReader(data))
+
+	var block Block
+	// 2.使用解码器解码
+	err := decoder.Decode(&block)
+	if err != nil {
+		log.Panic("解码出错")
+	}
+
+	return block
+}
+
+
+
+// // 3.生成哈希
+// func (block *Block) SetHash() {
+// 	// 1.拼接数据
+// 	// blockinfo := append(block.PrevHash, block.Data...)
+
+// 	//1. 拼装数据
+// 	/*
+// 	blockInfo = append(blockInfo, Uint64ToByte(block.Version)...)
+// 	blockInfo = append(blockInfo, block.PrevHash...)
+// 	blockInfo = append(blockInfo, block.MerkelRoot...)
+// 	blockInfo = append(blockInfo, Uint64ToByte(block.TimeStamp)...)
+// 	blockInfo = append(blockInfo, Uint64ToByte(block.Difficulty)...)
+// 	blockInfo = append(blockInfo, Uint64ToByte(block.Nonce)...)
+// 	blockInfo = append(blockInfo, block.Data...)
+// 	*/
+
+// 	//1. 拼装数据,join
+// 	tmp := [][]byte{
+// 		Uint64ToByte(block.Version),
+// 		block.PrevHash,
+// 		block.MerkelRoot,
+// 		Uint64ToByte(block.TimeStamp),
+// 		Uint64ToByte(block.Difficult),
+// 		Uint64ToByte(block.Nonce),
+// 		block.Data,
+// 	}
+
+// 	blockinfo := bytes.Join(tmp, []byte{})
+
+// 	// 2.sha256
+// 	hash := sha256.Sum256(blockinfo)
+// 	block.Hash = hash[:]
+// }

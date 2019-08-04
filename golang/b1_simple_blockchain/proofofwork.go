@@ -45,7 +45,7 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 			block.PrevHash,
 			block.MerkelRoot,
 			Uint64ToByte(block.TimeStamp),
-			Uint64ToByte(block.Difficult),
+			Uint64ToByte(block.Difficulty),
 			Uint64ToByte(nonce),
 			block.Data,
 		}
