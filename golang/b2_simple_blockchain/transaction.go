@@ -8,6 +8,7 @@ import (
 	"encoding/gob"
 )
 
+const reward = 12.5
 // 1.定义交易结构
 type Transaction struct {
 	TXID		[]byte
@@ -46,4 +47,15 @@ func (tx *Transaction) SetHash() {
 	data := buffer.Bytes()
 	hash := sha256.Sum256(data)
 	tx.TXID = hash[:]
+}
+
+// 2.创建挖矿交易
+func NewCoinbaseTx(address string, data string) *Transaction {
+	input := TXInput{[]bytes{}, -1, data}
+	output := TXOutput{reward, address}
+	
+	tx := Transaction{[]byte{}, []TXInput{input}, []TXOutput{output}}
+	tx.SetHash()
+
+	return &tx
 }
