@@ -30,6 +30,19 @@ func (cli *CLI) PrinBlockChain() {
 		if len(block.PrevHash) == 0 {
 			fmt.Printf("区块链遍历结束！")
 			break
-		}
+		} 
 	}
+}
+
+
+func (cli *CLI) GetBalance(address string) {
+	utxos := cli.bc.FindUTXOs(address)
+	
+	total :=0.0
+
+	for _, utxo := range utxos {
+		total += utxo.value
+	}
+
+	fmt.Printf("\"%s\"的余额位：%f\n", address, total)
 }
