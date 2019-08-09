@@ -145,21 +145,37 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 		for _, tx := range block.Transactions {
 			fmt.Printf("current txid : %x\n", tx.TXID)
 
+		OUTPUT:
 			// 遍历output
 			for i, output := range tx.TXOutputs {
 				fmt.Printf("current index : %d\n", i)
 
+				if spentOutputs[string(tx.TXID)] != nil {
+					for _, j := range spentOutputs[string(tx.TXID)] {
+						if int64(i) == j {
+							fmt.Printf("111111")
+							continue OUTPUT
+						}
+					}
+				}
+
 				if output.PubkeyHash == address {
 					UTXO = append(UTXO, output)
+				} else {
+					fmt.Printf("3333333")
 				}
 			}
 
-			// 遍历input
-			for _, input := range tx.TXInputs {
-				if input.Sig == address {
-					indexArray := spentOutputs[string(input.TXid)]
-					indexArray = append(indexArray, input.Index)
+			if !tx.IsCoinbase() {
+				// 遍历input
+				for _, input := range tx.TXInputs {
+					if input.Sig == address {
+						indexArray := spentOutputs[string(input.TXid)]
+						indexArray = append(indexArray, input.Index)
+					}
 				}
+			} else {
+				fmt.Printf("这是coinbase，不做input遍历\n")
 			}
 		}
 
@@ -170,4 +186,12 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 	}
 
 	return UTXO
+}
+
+
+func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]uint64, float64) {
+	var utxos map[string][]uint64
+	var calc float64
+
+	return utxos, calc
 }

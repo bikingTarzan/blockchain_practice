@@ -28,7 +28,7 @@ type TXInput struct {
 
 type TXOutput struct {
 	// 转账金额
-	value float64
+	Value float64
 	// 锁定脚本，我们用地址模拟
 	PubkeyHash string
 }
@@ -49,6 +49,20 @@ func (tx *Transaction) SetHash() {
 	tx.TXID = hash[:]
 }
 
+// 实现一个函数，判断当前的交易是否为挖矿交易
+func (tx *Transaction) IsCoinbase() bool {
+	if len(tx.TXInputs) == 1 {
+		input := tx.TXInputs[0]
+
+		if !bytes.Equal(input.TXid, []byte{}) || input.Index != -1 {
+			return false
+		}
+	}
+
+	return true
+}
+
+
 // 2.创建挖矿交易
 func NewCoinbaseTx(address string, data string) *Transaction {
 	input := TXInput{[]byte{}, -1, data}
@@ -58,4 +72,43 @@ func NewCoinbaseTx(address string, data string) *Transaction {
 	tx.SetHash()
 
 	return &tx
+}
+
+
+// 创建普通的转账交易
+// 创建output
+// 如果有零钱，要找零
+
+func NewTransaction(from, to string, amount float64, bc *BlockChain) *Transaction{
+	utxos, resValue := bc.FindNeedUTXOs(from, amount)
+
+	if resValue < amount {
+		return nil
+	}
+
+	var inputs []TXInput
+	var outputs []TXOutput
+
+	//2.创建交易输入，将这些UTXO逐一转成inputs
+	for id, indexArray := range utxos {
+		for _, i := range indexArray {
+			input := TXInput{[]byte(id), int64(i), from}
+			inputs = append(inputs, input)
+		}
+	}
+
+	// 创建交易输出
+	output := TXOutput{amount, to}
+	outputs = append(outputs, output)
+
+	// 找零
+	if resValue > amount {
+		outputs = append(outputs, TXOutput{resValue-amount, from})
+	}
+
+	tx := Transaction{[]byte{}, inputs, outputs}
+	tx.SetHash()
+
+	return &tx
+
 }
