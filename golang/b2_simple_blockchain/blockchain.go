@@ -132,5 +132,42 @@ func (bc *BlockChain) Printchain() {
 func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 	var UTXO []TXOutput
 
+	spentOutputs := make(map[string][]int64)
+
+
+	it := bc.NewIterator()
+
+	for {
+		// 1.遍历区块
+		block := it.Next()
+
+		// 2.遍历交易
+		for _, tx := range block.Transactions {
+			fmt.Printf("current txid : %x\n", tx.TXID)
+
+			// 遍历output
+			for i, output := range tx.TXOutputs {
+				fmt.Printf("current index : %d\n", i)
+
+				if output.PubkeyHash == address {
+					UTXO = append(UTXO, output)
+				}
+			}
+
+			// 遍历input
+			for _, input := range tx.TXInputs {
+				if input.Sig == address {
+					indexArray := spentOutputs[string(input.TXid)]
+					indexArray = append(indexArray, input.Index)
+				}
+			}
+		}
+
+		if len(block.PrevHash) == 0 {
+			break
+			fmt.Printf("区块遍历完成退出")
+		}
+	}
+
 	return UTXO
 }

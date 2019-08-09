@@ -30,7 +30,7 @@ type TXOutput struct {
 	// 转账金额
 	value float64
 	// 锁定脚本，我们用地址模拟
-	PubKeyHash string
+	PubkeyHash string
 }
 
 // 对交易序列化
