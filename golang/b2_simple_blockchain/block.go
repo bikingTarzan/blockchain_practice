@@ -27,7 +27,8 @@ type Block struct {
 
 	Hash []byte
 	//3.数据
-	Data []byte
+	// Data []byte
+	Transactions []*Transaction
 }
 
 // 实现一个辅助函数，把unit64转成byte
@@ -44,7 +45,7 @@ func Uint64ToByte(num uint64) []byte {
 }
 
 // 2.创建一个区块
-func NewBlock(data string, prevBlockHash []byte) *Block {
+func NewBlock(txs []*Transaction, prevBlockHash []byte) *Block {
 	block := Block{
 		Version:	00,
 		PrevHash:	prevBlockHash,
@@ -53,9 +54,11 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 		Difficulty:	0,
 		Nonce:		0,
 		Hash:		[]byte{},
-		Data:		[]byte(data),
+		// Data:		[]byte(data),
+		Transactions: txs,
 	}
 
+	block.MerkelRoot = block.MakeMerkelRoot()
 	// block.SetHash()
 
 	//创建一个pow对象
@@ -133,3 +136,9 @@ func Deserialize(data []byte) Block {
 // 	hash := sha256.Sum256(blockinfo)
 // 	block.Hash = hash[:]
 // }
+
+
+// 只对交易做简单的拼接，而不做二叉树
+func (block *Block) MakeMerkelRoot() []byte {
+	return []byte{}
+}

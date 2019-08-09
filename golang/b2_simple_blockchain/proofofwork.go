@@ -47,7 +47,7 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 			Uint64ToByte(block.TimeStamp),
 			Uint64ToByte(block.Difficulty),
 			Uint64ToByte(nonce),
-			block.Data,
+			// block.Data,
 		}
 
 		blockInfo := bytes.Join(tmp, []byte{})
@@ -63,5 +63,5 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 		}
 	}
 
-	return []byte("helloworld"), 10
+	//return []byte("helloworld"), 10
 }

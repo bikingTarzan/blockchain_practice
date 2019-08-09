@@ -51,7 +51,7 @@ func (tx *Transaction) SetHash() {
 
 // 2.创建挖矿交易
 func NewCoinbaseTx(address string, data string) *Transaction {
-	input := TXInput{[]bytes{}, -1, data}
+	input := TXInput{[]byte{}, -1, data}
 	output := TXOutput{reward, address}
 	
 	tx := Transaction{[]byte{}, []TXInput{input}, []TXOutput{output}}

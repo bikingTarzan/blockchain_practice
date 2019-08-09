@@ -37,9 +37,9 @@ func (cli *CLI) Run() {
 
 		if len(args) == 4 && args[2] == "--data" {
 			// a.获取数据
-			data := args[3]
+			// data := args[3]
 			// b.添加数据
-			cli.AddBlock(data)
+			// cli.AddBlock(data)
 		} else {
 			fmt.Printf("添加区块参数使用不当，请检查")
 			fmt.Printf(Usage)

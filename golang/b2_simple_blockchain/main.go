@@ -8,7 +8,7 @@ import (
 // 存储方式由slice更换为bolt数据库（kv库）
 // 引入交易结构
 func main() {
-	bc := NewBlockChain()
+	bc := NewBlockChain("小明")
 
 	cli := CLI{bc}
 	cli.Run()

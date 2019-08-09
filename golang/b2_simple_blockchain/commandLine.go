@@ -2,8 +2,8 @@ package main
 
 import "fmt"
 
-func (cli *CLI) AddBlock(data string) {
-	cli.bc.AddBlock(data)
+func (cli *CLI) AddBlock(txs []*Transaction) {
+	cli.bc.AddBlock(txs)
 	fmt.Printf("添加区块成功！\n")
 }
 
@@ -25,7 +25,7 @@ func (cli *CLI) PrinBlockChain() {
 		fmt.Printf("难度值(随便写的）: %d\n", block.Difficulty)
 		fmt.Printf("随机数 : %d\n", block.Nonce)
 		fmt.Printf("当前区块哈希值: %x\n", block.Hash)
-		fmt.Printf("区块数据 :%s\n", block.Data)
+		fmt.Printf("区块数据 :%s\n", block.Transactions[0].TXInputs[0].Sig)
 
 		if len(block.PrevHash) == 0 {
 			fmt.Printf("区块链遍历结束！")
