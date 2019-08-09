@@ -8,7 +8,7 @@ import (
 	"encoding/gob"
 )
 
-const reward = 12.5
+const reward = 50.0
 // 1.定义交易结构
 type Transaction struct {
 	TXID		[]byte
@@ -51,17 +51,20 @@ func (tx *Transaction) SetHash() {
 
 // 实现一个函数，判断当前的交易是否为挖矿交易
 func (tx *Transaction) IsCoinbase() bool {
-	if len(tx.TXInputs) == 1 {
-		input := tx.TXInputs[0]
+	// if len(tx.TXInputs) == 1 {
+	// 	input := tx.TXInputs[0]
 
-		if !bytes.Equal(input.TXid, []byte{}) || input.Index != -1 {
-			return false
-		}
+	// 	if !bytes.Equal(input.TXid, []byte{}) || input.Index != -1 {
+	// 		return false
+	// 	}
+	// }
+
+	if len(tx.TXInputs) == 1 && len(tx.TXInputs[0].TXid) == 0 && tx.TXInputs[0].Index == -1 {
+		return true
 	}
 
-	return true
+	return false
 }
-
 
 // 2.创建挖矿交易
 func NewCoinbaseTx(address string, data string) *Transaction {
