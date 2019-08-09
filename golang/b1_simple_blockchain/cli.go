@@ -44,8 +44,6 @@ func (cli *CLI) Run() {
 			fmt.Printf("添加区块参数使用不当，请检查")
 			fmt.Printf(Usage)
 		}
-
-
 	case "printChain":
 		fmt.Printf("打印区块\n")
 		cli.PrinBlockChain()

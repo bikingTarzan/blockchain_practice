@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-
 	"./bolt"
 )
 
@@ -27,7 +26,7 @@ func NewBlockChain() *BlockChain {
 	// 1.打开数据库
 	db, err := bolt.Open(blockChainDb, 0600, nil)
 
-	defer db.Close()
+	//defer db.Close()
 
 	if err != nil {
 		log.Panic("打开数据库失败！！")
@@ -73,7 +72,6 @@ func (bc *BlockChain) AddBlock(data string) {
 
 	db := bc.db
 	lastHash := bc.tail
-
 	
 	db.Update(func(tx *bolt.Tx) error {
 		// bucket一定已经存在
