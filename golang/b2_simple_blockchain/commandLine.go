@@ -73,5 +73,5 @@ func (cli *CLI) Send(from, to string, amount float64, miner, data string) {
 	//3. 添加到区块
 
 	cli.bc.AddBlock([]*Transaction{coinbase, tx})
-	fmt.Printf("转账成功！")
+	fmt.Printf("转账成功！\n")
 }
